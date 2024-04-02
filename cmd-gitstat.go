@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 
 	"github.com/adnsv/go-utils/git"
@@ -9,7 +10,8 @@ import (
 )
 
 type gitstat struct {
-	Output string `short:"o" type:"path" help:"Output filename"`
+	Verbose bool   `help:"Show detailed output"`
+	Output  string `short:"o" type:"path" help:"Output filename"`
 }
 
 func (cmd *gitstat) Run(ctx *kong.Context) error {
@@ -18,11 +20,18 @@ func (cmd *gitstat) Run(ctx *kong.Context) error {
 		return err
 	}
 
+	if cmd.Verbose {
+		fmt.Printf("running in directory: %s\n", wd)
+	}
+
 	vstats, err := git.Stat(wd)
 	if err != nil {
 		return err
 	}
 
+	if cmd.Verbose {
+		fmt.Printf("parsing tag: %s\n", vstats.Description.Tag)
+	}
 	vinfo, err := git.ParseVersion(vstats.Description)
 	if err != nil {
 		return err
