@@ -4,7 +4,6 @@ go 1.21.5
 
 require (
 	github.com/adnsv/go-utils v0.7.0
-	github.com/adnsv/slog v1.0.0-rc.7
 	github.com/alecthomas/kong v0.9.0
 )
 
