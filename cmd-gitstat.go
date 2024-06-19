@@ -17,7 +17,7 @@ type gitstat struct {
 func (cmd *gitstat) Run(ctx *kong.Context) error {
 	wd, err := os.Getwd()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to obtain current wd: %w", err)
 	}
 
 	if cmd.Verbose {
@@ -26,7 +26,7 @@ func (cmd *gitstat) Run(ctx *kong.Context) error {
 
 	vstats, err := git.Stat(wd)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to obtain stats dir %q: %w", wd, err)
 	}
 
 	if cmd.Verbose {
@@ -34,7 +34,7 @@ func (cmd *gitstat) Run(ctx *kong.Context) error {
 	}
 	vinfo, err := git.ParseVersion(vstats.Description)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to parse version info: %w", err)
 	}
 
 	type jret struct {
@@ -66,13 +66,16 @@ func (cmd *gitstat) Run(ctx *kong.Context) error {
 	}
 	buf, err := json.MarshalIndent(j, "", "  ")
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to marshal results into JSON: %w", err)
 	}
 
 	if cmd.Output != "" {
+		if cmd.Verbose {
+			fmt.Printf("writing output to %q\n", cmd.Output)
+		}
 		err = os.WriteFile(cmd.Output, buf, 0666)
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to write results into a file: %w", err)
 		}
 	} else {
 		_, err = os.Stdout.Write(buf)
