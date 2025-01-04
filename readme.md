@@ -1,6 +1,6 @@
 # go-action
 
-A collection of command-line utilities for managing version information and build processes.
+Utilities for managing version information and build processes.
 
 ## gitstat Subcommand
 
