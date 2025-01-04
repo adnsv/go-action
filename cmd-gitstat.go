@@ -14,6 +14,7 @@ type gitstat struct {
 	Output  string `short:"o" type:"path" help:"Output filename"`
 }
 
+// Run executes the gitstat command.
 func (cmd *gitstat) Run(ctx *kong.Context) error {
 	wd, err := os.Getwd()
 	if err != nil {
@@ -47,6 +48,9 @@ func (cmd *gitstat) Run(ctx *kong.Context) error {
 		Semantic          string `json:"ver-semantic"`
 		Quad              string `json:"ver-quad"`
 		NNNN              string `json:"ver-nnnn"`
+		Major             uint64 `json:"ver-major"`
+		Minor             uint64 `json:"ver-minor"`
+		Patch             uint64 `json:"ver-patch"`
 		Pre               string `json:"ver-pre,omitempty"`
 		Build             string `json:"ver-build,omitempty"`
 	}
@@ -61,6 +65,9 @@ func (cmd *gitstat) Run(ctx *kong.Context) error {
 		Semantic:          vinfo.Semantic.String(),
 		Quad:              vinfo.Quad.String(),
 		NNNN:              vinfo.Quad.CommaSeparatedString(),
+		Major:             vinfo.Semantic.Major,
+		Minor:             vinfo.Semantic.Minor,
+		Patch:             vinfo.Semantic.Patch,
 		Pre:               vinfo.Pre,
 		Build:             vinfo.Build,
 	}
